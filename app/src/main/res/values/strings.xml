@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CallBlocker</string>
+
+    <!-- TABS -->
+    <string name="recent_blocked_numbers_label">Recently</string>
+    <string name="blocked_numbers_label">Blocked</string>
+    <string name="busy_label">Busy hours</string>
+
+    <!-- MENU -->
+    <string name="busy_mode_label">Busy mode</string>
+</resources>
