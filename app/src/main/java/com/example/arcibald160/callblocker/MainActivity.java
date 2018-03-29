@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
+    private Menu menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,21 +43,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
         switch (item.getItemId()) {
             case R.id.busy_mode_id:
+                MenuItem busyIcon = menu.findItem(R.id.busy_mode_icon_id);
 
                 if (item.isChecked()) {
                     item.setChecked(false);
+                    busyIcon.setIcon(R.mipmap.turn_off_round);
                 } else {
                     item.setChecked(true);
+                    busyIcon.setIcon(R.mipmap.turn_on_round);
                 }
                 return true;
             default:
