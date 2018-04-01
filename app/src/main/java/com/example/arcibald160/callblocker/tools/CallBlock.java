@@ -36,7 +36,7 @@ public class CallBlock extends BroadcastReceiver {
 //            {
                 // If yes, invoke the method
             try {
-                declinePhone(context);
+//                declinePhone(context);
             } catch (Exception e) {
                 e.printStackTrace();
             }

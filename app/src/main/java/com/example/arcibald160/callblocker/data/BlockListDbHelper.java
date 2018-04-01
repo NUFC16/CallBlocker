@@ -32,9 +32,9 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE = "CREATE TABLE "  + BlockListContract.BlockListEntry.TABLE_NAME + " (" +
                 BlockListContract.BlockListEntry._ID + " INTEGER PRIMARY KEY, " +
                 BlockListContract.BlockListEntry.COLUMN_NUMBER + " TEXT NOT NULL, " +
-                BlockListContract.BlockListEntry.COLUMN_NAME    + " INTEGER ," +
-                BlockListContract.BlockListEntry.COLUMN_TIME + " TEXT NOT NULL, " +
-                BlockListContract.BlockListEntry.COLUMN_DATE + " TEXT NOT NULL);";
+                BlockListContract.BlockListEntry.COLUMN_NAME    + " TEXT ," +
+                BlockListContract.BlockListEntry.COLUMN_TIME + " TIME NOT NULL, " +
+                BlockListContract.BlockListEntry.COLUMN_DATE + " DATE NOT NULL);";
 
         db.execSQL(CREATE_TABLE);
     }

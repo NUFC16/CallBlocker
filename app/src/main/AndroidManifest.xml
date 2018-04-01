@@ -26,6 +26,12 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name="com.example.arcibald160.callblocker.data.BlockListContentProvider"
+            android:authorities="com.example.arcibald160.callblocker"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
