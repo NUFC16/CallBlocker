@@ -8,4 +8,8 @@
 
     <!-- MENU -->
     <string name="busy_mode_label">Busy mode</string>
+
+    <!-- IMAGE DESCRIPTION -->
+    <string name="contact_img_desc">Contact image</string>
+    <string name="remove_img_desc">Remove blocked number</string>
 </resources>
