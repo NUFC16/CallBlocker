@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -21,17 +22,18 @@
             </intent-filter>
         </activity>
 
-        <receiver  android:name=".tools.CallBlock">
-            <intent-filter  android:priority="100" >
+        <receiver android:name=".tools.CallBlock">
+            <intent-filter android:priority="100">
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 
         <provider
-            android:name="com.example.arcibald160.callblocker.data.BlockListContentProvider"
+            android:name=".data.BlockListContentProvider"
             android:authorities="com.example.arcibald160.callblocker"
-            android:exported="false"/>
+            android:exported="false" />
 
+        <activity android:name=".AddContactToBlockedList"></activity>
     </application>
 
 </manifest>

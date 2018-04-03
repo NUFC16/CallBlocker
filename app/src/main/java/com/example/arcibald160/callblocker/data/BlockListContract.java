@@ -11,15 +11,32 @@ public class BlockListContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     // Define the possible paths for accessing data in this contract
-    // This is the path for the "tasks" directory
+    // This is the path for the "numbers" directory
     public static final String PATH_BLOCKED_NUMBERS = "numbers";
+    public static final String PATH_BLOCKED_CALLS = "calls";
 
-    /* BlockListEntry is an inner class that defines the contents of the task table */
+    /* BlockListEntry is an inner class that defines the contents of the blocked calls table */
     public static final class BlockListEntry implements BaseColumns {
 
         // BlockListEntry content URI = base content URI + path
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_BLOCKED_NUMBERS).build();
+
+        // BlockListEntry table and column names
+        public static final String TABLE_NAME = "blocked_numbers";
+
+        // Since BlockListEntry implements the interface "BaseColumns", it has an automatically produced
+        // "_ID" column in addition to the two below
+        public static final String
+                COLUMN_NUMBER = "number",
+                COLUMN_NAME = "contact_name";
+    }
+
+    public static final class BlockedCallsReceived implements BaseColumns {
+
+        // BlockListEntry content URI = base content URI + path
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BLOCKED_CALLS).build();
 
         // BlockListEntry table and column names
         public static final String TABLE_NAME = "blocked_calls";

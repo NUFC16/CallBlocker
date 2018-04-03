@@ -1,6 +1,8 @@
 package com.example.arcibald160.callblocker;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
@@ -34,15 +36,32 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
 
-        // permission for writing data
-        int PERMISSION_ACCESS_CALL_PHONE = 0;
-        ActivityCompat.requestPermissions(
-                this,
-                new String[]{Manifest.permission.CALL_PHONE},
-                PERMISSION_ACCESS_CALL_PHONE
-        );
+//        // permission for writing data
+//        int PERMISSION_ACCESS_CALL_PHONE = 0;
+//        ActivityCompat.requestPermissions(
+//                this,
+//                new String[]{Manifest.permission.CALL_PHONE},
+//                PERMISSION_ACCESS_CALL_PHONE
+//        );
+        int PERMISSION_ALL = 0;
+        String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE};
+
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
     }
 
+    // check if app has permissions so we dont spam the user
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 
     private void setupViewPager(ViewPager viewPager) {

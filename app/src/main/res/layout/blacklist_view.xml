@@ -24,6 +24,7 @@
             android:layout_marginEnd="15dp"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
+            android:background="@color/white"
             android:contentDescription="@string/contact_img_desc"
             android:src="@mipmap/contacts_icon_round" />
 

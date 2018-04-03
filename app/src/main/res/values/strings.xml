@@ -6,6 +6,17 @@
     <string name="blocked_numbers_label">Blocked</string>
     <string name="busy_label">Busy hours</string>
 
+    <string name="unknown">Unknown</string>
+
+    <!-- add contact to blocked list -->
+    <string name="number_label">Number</string>
+    <string name="name_label">Name</string>
+    <string name="contacts_button_label">Pick from contacts</string>
+    <string name="blocked_button_label">Add to blocked list</string>
+
+    <!-- Toast validation warning -->
+    <string name="enter_number">Please enter a number</string>
+
     <!-- MENU -->
     <string name="busy_mode_label">Busy mode</string>
 

@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
-/**
- * Created by arcibald160 on 01.04.18..
- */
-
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedViewHolder> {
     private Context mContext;
     // Class variables for the Cursor that holds blocked calls data and the Context
@@ -39,19 +35,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedVie
         int idIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry._ID);
         int nameIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NAME);
         int numberIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NUMBER);
-//        int timeIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_TIME);
-//        int dateIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_DATE);
 
         mCursor.moveToPosition(position); // get to the right location in the cursor
 
         // Determine the values of the wanted data
         final int id = mCursor.getInt(idIndex);
         String name = mCursor.getString(nameIndex);
+
         // if name is unknown
-        name = (name == null) ? "Unknown": name;
+        name = (name == null) ? mContext.getString(R.string.unknown): name;
         String number = mCursor.getString(numberIndex);
-//        String time = mCursor.getString(timeIndex);
-//        String date = mCursor.getString(dateIndex);
 
         //Set values
         holder.itemView.setTag(id);

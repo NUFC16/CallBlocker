@@ -13,7 +13,7 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "blockedNumbersDb.db";
 
     // If you change the database schema, you must increment the database version
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
 
     // Constructor
@@ -28,15 +28,21 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        // Create tasks table (careful to follow SQL formatting rules)
-        final String CREATE_TABLE = "CREATE TABLE "  + BlockListContract.BlockListEntry.TABLE_NAME + " (" +
-                BlockListContract.BlockListEntry._ID + " INTEGER PRIMARY KEY, " +
-                BlockListContract.BlockListEntry.COLUMN_NUMBER + " TEXT NOT NULL, " +
-                BlockListContract.BlockListEntry.COLUMN_NAME    + " TEXT ," +
-                BlockListContract.BlockListEntry.COLUMN_TIME + " TIME NOT NULL, " +
-                BlockListContract.BlockListEntry.COLUMN_DATE + " DATE NOT NULL);";
+        final String CREATE_TABLE_BLOCKED_NUMBERS = "CREATE TABLE "  + BlockListContract.BlockListEntry.TABLE_NAME + " (" +
+                BlockListContract.BlockedCallsReceived._ID + " INTEGER PRIMARY KEY, " +
+                BlockListContract.BlockedCallsReceived.COLUMN_NUMBER + " TEXT NOT NULL, " +
+                BlockListContract.BlockedCallsReceived.COLUMN_NAME    + " TEXT);";
 
-        db.execSQL(CREATE_TABLE);
+        // Create tasks table (careful to follow SQL formatting rules)
+        final String CREATE_TABLE_BLOCKED_CALLS = "CREATE TABLE "  + BlockListContract.BlockedCallsReceived.TABLE_NAME + " (" +
+                BlockListContract.BlockedCallsReceived._ID + " INTEGER PRIMARY KEY, " +
+                BlockListContract.BlockedCallsReceived.COLUMN_NUMBER + " TEXT NOT NULL, " +
+                BlockListContract.BlockedCallsReceived.COLUMN_NAME    + " TEXT ," +
+                BlockListContract.BlockedCallsReceived.COLUMN_TIME + " TIME NOT NULL, " +
+                BlockListContract.BlockedCallsReceived.COLUMN_DATE + " DATE NOT NULL);";
+
+        db.execSQL(CREATE_TABLE_BLOCKED_NUMBERS);
+        db.execSQL(CREATE_TABLE_BLOCKED_CALLS);
     }
 
 
@@ -47,6 +53,7 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockListEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedCallsReceived.TABLE_NAME);
         onCreate(db);
     }
 }
