@@ -2,10 +2,12 @@ package com.example.arcibald160.callblocker;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
@@ -28,7 +30,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedVie
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(BlockedViewHolder holder, int position) {
+    public void onBindViewHolder(final BlockedViewHolder holder, int position) {
         int idIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry._ID);
         int nameIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NAME);
         int numberIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NUMBER);
@@ -46,8 +48,21 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedVie
 
         //Set values
         holder.itemView.setTag(id);
+        holder.removeBlockedImageView.setTag(id);
         holder.blockedNameView.setText(name);
         holder.blockedNumberView.setText(number);
+        holder.removeBlockedImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int id = (int) view.getTag();
+
+                // Build appropriate uri with String row id appended
+                String stringId = Integer.toString(id);
+                Uri uri = BlockListContract.BlockListEntry.CONTENT_URI;
+                uri = uri.buildUpon().appendPath(stringId).build();
+                mContext.getContentResolver().delete(uri, null, null);
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -81,10 +96,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedVie
         // each data item is just a string in this case
         TextView blockedNameView;
         TextView blockedNumberView;
+        ImageView removeBlockedImageView;
 
         public BlockedViewHolder(View itemView) {
             super(itemView);
 
+            removeBlockedImageView = (ImageView) itemView.findViewById(R.id.remove_blocked_contact_id);
             blockedNameView = (TextView) itemView.findViewById(R.id.blocked_name_id);
             blockedNumberView = (TextView) itemView.findViewById(R.id.blocked_number_id);
         }
