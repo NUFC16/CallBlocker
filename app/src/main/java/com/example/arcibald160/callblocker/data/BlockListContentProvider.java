@@ -11,10 +11,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Created by arcibald160 on 01.04.18..
- */
-
 public class BlockListContentProvider extends ContentProvider {
 
     public static final int BLOCKED_NUMBERS = 100;
@@ -27,7 +23,7 @@ public class BlockListContentProvider extends ContentProvider {
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS, BLOCKED_NUMBERS);
-//        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/#", BLOCKED_NUMBERS_WITH_ID);
+        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/#", BLOCKED_NUMBERS_WITH_ID);
 //        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/time/#", BLOCKED_NUMBERS_WITH_TIME);
 //        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/date/#", BLOCKED_NUMBERS_WITH_DATE);
         return uriMatcher;
@@ -112,8 +108,7 @@ public class BlockListContentProvider extends ContentProvider {
 
         switch (match) {
             case BLOCKED_NUMBERS:
-                // Insert new values into the database
-                // Inserting values into tasks table
+                // Insert new value into the database
                 long id = db.insert(BlockListContract.BlockListEntry.TABLE_NAME, null, contentValues);
                 if ( id > 0 ) {
                     returnUri = ContentUris.withAppendedId(BlockListContract.BlockListEntry.CONTENT_URI, id);
@@ -121,8 +116,6 @@ public class BlockListContentProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
-            // Set the value for the returnedUri and write the default case for unknown URI's
-            // Default case throws an UnsupportedOperationException
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -135,8 +128,36 @@ public class BlockListContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        /* Users of the delete method will expect the number of rows deleted to be returned. */
+
+        // Get access to the task database (to write new data to)
+        final SQLiteDatabase db = mBlockListDbHelper.getWritableDatabase();
+        // starts as 0
+        int tasksDeleted;
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case BLOCKED_NUMBERS_WITH_ID:
+                /// Get the task ID from the URI path
+                String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                tasksDeleted = db.delete(BlockListContract.BlockListEntry.TABLE_NAME, "_id=?", new String[]{id});
+                break;
+            // Set the value for the returnedUri and write the default case for unknown URI's
+            // Default case throws an UnsupportedOperationException
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        // Notify the resolver of a change and return the number of items deleted
+        if (tasksDeleted != 0) {
+            // A task was deleted, set notification
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return tasksDeleted;
     }
 
     @Override

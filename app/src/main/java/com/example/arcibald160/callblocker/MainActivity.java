@@ -36,13 +36,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
 
-//        // permission for writing data
-//        int PERMISSION_ACCESS_CALL_PHONE = 0;
-//        ActivityCompat.requestPermissions(
-//                this,
-//                new String[]{Manifest.permission.CALL_PHONE},
-//                PERMISSION_ACCESS_CALL_PHONE
-//        );
         int PERMISSION_ALL = 0;
         String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE};
 

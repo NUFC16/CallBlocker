@@ -12,18 +12,16 @@ import com.example.arcibald160.callblocker.data.BlockListContract;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedViewHolder> {
     private Context mContext;
-    // Class variables for the Cursor that holds blocked calls data and the Context
+    // Class variables for the Cursor that holds blocked calls data
     private Cursor mCursor;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public CustomAdapter(Context context) {
         mContext = context;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public BlockedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
+        // new view
         View view = LayoutInflater.from(mContext).inflate(R.layout.blacklist_view, parent, false);
         return new BlockedViewHolder(view);
     }
@@ -31,12 +29,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedVie
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(BlockedViewHolder holder, int position) {
-        // Indices for the _id, description, and priority columns
         int idIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry._ID);
         int nameIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NAME);
         int numberIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NUMBER);
 
-        mCursor.moveToPosition(position); // get to the right location in the cursor
+        // get to the right location in the cursor
+        mCursor.moveToPosition(position);
 
         // Determine the values of the wanted data
         final int id = mCursor.getInt(idIndex);

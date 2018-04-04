@@ -1,6 +1,5 @@
 package com.example.arcibald160.callblocker;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +21,8 @@ public class AddContactToBlockedList extends AppCompatActivity {
     private EditText mBlockedNameView;
     private Button mContactsButton;
     private Button mAddButton;
+
+    private static final int PICK_CONTACT_CODE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class AddContactToBlockedList extends AppCompatActivity {
                 mBlockedNameView.setText("");
 
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(i, 1001);
+                startActivityForResult(i, PICK_CONTACT_CODE);
             }
         });
 
@@ -91,56 +91,59 @@ public class AddContactToBlockedList extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case 1001:
-                // if back is pressed
-                if (data == null) break;
+        if (requestCode == PICK_CONTACT_CODE) {
 
+            if (resultCode == RESULT_OK) {
                 Uri uriContact = data.getData();
 
-                if (resultCode == Activity.RESULT_OK) {
+                // get Cursor from picked contact
+                Cursor cursorID = this.getContentResolver().query(
+                        uriContact,
+                        new String[]{ContactsContract.Contacts._ID},
+                        null,
+                        null,
+                        null
+                );
 
-                    Cursor cursorID = this.getContentResolver().query(
-                            uriContact,
-                            new String[]{ContactsContract.Contacts._ID},
-                            null, null, null);
+                // get string id of picked contact
+                String contactID = null;
+                if (cursorID.moveToFirst()) {
+                    contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
+                }
+                cursorID.close();
 
-                    String contactID = null;
-                    if (cursorID.moveToFirst()) {
+                Cursor cursorPhone = this.getContentResolver().query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " +
+                                ContactsContract.CommonDataKinds.Phone.TYPE + " = " +
+                                ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
+                        new String[]{contactID}, null);
 
-                        contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
-                    }
-
-                    cursorID.close();
-
-                    Cursor cursorPhone = this.getContentResolver().query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " +
-                                    ContactsContract.CommonDataKinds.Phone.TYPE + " = " +
-                                    ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
-                            new String[]{contactID}, null);
-
-                    if (cursorPhone.moveToFirst()) {
-                        String phoneNum = cursorPhone.getString(
-                                cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        mBlockedNumberView.setText(phoneNum);
-                    }
-
-                    // querying contact data store
-                    Cursor cursor = this.getContentResolver().query(
-                            uriContact, null, null, null, null);
-
-                    if (cursor.moveToFirst()) {
-                        String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                        mBlockedNameView.setText(contactName);
-                    }
+                // get phone number from contact
+                if (cursorPhone.moveToFirst()) {
+                    String phoneNum = cursorPhone.getString(
+                            cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    mBlockedNumberView.setText(phoneNum);
                 }
 
-                break;
+                // querying contact data store
+                Cursor cursor = this.getContentResolver().query(
+                        uriContact,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+
+                // get name from contact
+                if (cursor.moveToFirst()) {
+                    String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    mBlockedNameView.setText(contactName);
+                }
+            }
         }
     }
 }
