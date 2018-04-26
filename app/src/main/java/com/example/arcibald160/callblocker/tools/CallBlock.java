@@ -3,10 +3,16 @@ package com.example.arcibald160.callblocker.tools;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.arcibald160.callblocker.MainActivity;
+import com.example.arcibald160.callblocker.data.BlockListContract;
 
 import java.lang.reflect.Method;
 
@@ -17,31 +23,50 @@ import java.lang.reflect.Method;
 public class CallBlock extends BroadcastReceiver {
     // This String will hold the incoming phone number
     private String number;
+    private static final String TAG = "CallBlockReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        // If, the received action is not a type of "Phone_State", ignore it
-        if (!intent.getAction().equals("android.intent.action.PHONE_STATE"))
-            return;
 
-            // Else, try to do some action
-        else
-        {
+        // If, the received action is not a type of "Phone_State", ignore it
+        if (!intent.getAction().equals("android.intent.action.PHONE_STATE")) {
+            return;
+        } else {
+
             // Fetch the number of incoming call
             number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 
-            // Check, whether this is a member of "Black listed" phone numbers stored in the database
-//            if(MainActivity.blockList.contains(new Blacklist(number)))
-//            {
-                // If yes, invoke the method
-            try {
-//                declinePhone(context);
-            } catch (Exception e) {
-                e.printStackTrace();
+            // TODO: remove hardcoded values and make better solution
+            String countryCode = "+385";
+            if (number.contains(countryCode)) {
+                number = number.replace(countryCode, "0");
             }
+
+//            // debug purposes e-is ususally error but this is hack for broadcaste receiver
+//            Log.e(TAG, number);
+
+            Uri uri = BlockListContract.BlockListEntry.CONTENT_URI;
+
+            // search only number column
+            Cursor mCursor = context.getContentResolver().query(
+                    uri,
+                    new String[] {BlockListContract.BlockListEntry.COLUMN_NUMBER},
+                    BlockListContract.BlockListEntry.COLUMN_NUMBER + "=?",
+                     new String[]{ number },
+                    null
+            );
+            // Check, whether this is a member of "Black listed" phone numbers stored in the database
+            if(mCursor.getCount() != 0) {
+                // If yes, invoke the method
+                try {
+                    declinePhone(context);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            mCursor.close();
             return;
-//            }
         }
     }
 
