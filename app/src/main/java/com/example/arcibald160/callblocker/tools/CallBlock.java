@@ -14,7 +14,6 @@ import android.util.Log;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CallBlock extends BroadcastReceiver {
@@ -29,8 +28,9 @@ public class CallBlock extends BroadcastReceiver {
         // If, the received action is not a type of "Phone_State", ignore it
         if (!intent.getAction().equals("android.intent.action.PHONE_STATE")) {
             return;
-        } else {
+        }
 
+        if (intent.getExtras().getString(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)){
             // Fetch the number of incoming call
             number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 
