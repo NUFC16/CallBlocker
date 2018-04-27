@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.BlockedViewHolder> {
+public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.BlockedViewHolder> {
     private Context mContext;
     // Class variables for the Cursor that holds blocked calls data
     private Cursor mCursor;
 
-    public CustomAdapter(Context context) {
+    public Tab2CustomAdapter(Context context) {
         mContext = context;
     }
 

@@ -16,17 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.arcibald160.callblocker.AddContactToBlockedList;
-import com.example.arcibald160.callblocker.CustomAdapter;
+import com.example.arcibald160.callblocker.Tab2CustomAdapter;
 import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 
 public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int LOADER_ID = 1234;
+    private static final int LOADER_ID = 1100;
 
     private RecyclerView mRecyclerView;
-    private CustomAdapter mAdapter;
+    private Tab2CustomAdapter mAdapter;
 
     @Nullable
     @Override
@@ -44,22 +44,8 @@ public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallba
             public void onClick(View view) {
                 Intent addContactToBlockedList = new Intent(getContext(), AddContactToBlockedList.class);
                 startActivity(addContactToBlockedList);
-
-//                Date dt = new Date();
-//
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-//
-//                String date = dateFormat.format(dt);
-//                String time = timeFormat.format(dt);
-//
-//                mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_NUMBER, "09199988776");
-////                mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_DATE, date);
-////                mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_TIME, time);
-
             }
         });
-
 
         // Recycler view
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_tab2);
@@ -72,7 +58,7 @@ public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallba
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // specify an adapter (see also next example)
-        mAdapter = new CustomAdapter(getContext());
+        mAdapter = new Tab2CustomAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
 
         return view;

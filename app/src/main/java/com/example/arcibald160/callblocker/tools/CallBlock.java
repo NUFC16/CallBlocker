@@ -1,6 +1,7 @@
 package com.example.arcibald160.callblocker.tools;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,16 +10,12 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.arcibald160.callblocker.MainActivity;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 import java.lang.reflect.Method;
-
-/**
- * Created by arcibald160 on 31.03.18..
- */
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CallBlock extends BroadcastReceiver {
     // This String will hold the incoming phone number
@@ -61,6 +58,7 @@ public class CallBlock extends BroadcastReceiver {
                 // If yes, invoke the method
                 try {
                     declinePhone(context);
+                    addToBlockedCallsList(number, context);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -68,6 +66,24 @@ public class CallBlock extends BroadcastReceiver {
             mCursor.close();
             return;
         }
+    }
+
+    private void addToBlockedCallsList(String number, Context context) {
+        Date current = new Date();
+
+        java.sql.Date sqlDate = new java.sql.Date(current.getTime());
+        java.sql.Time sqlTime = new java.sql.Time(current.getTime());
+
+        // insert new values to blocked contacts list (used in recently)
+        ContentValues mBlockedList = new ContentValues();
+        mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_NUMBER, number);
+        mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_DATE, String.valueOf(sqlDate));
+        mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_TIME, String.valueOf(sqlTime));
+
+        context.getContentResolver().insert(
+                BlockListContract.BlockedCallsReceived.CONTENT_URI, // the user dictionary content URI
+                mBlockedList                                        // the values to insert
+        );
     }
 
     private void declinePhone(Context context) throws Exception {

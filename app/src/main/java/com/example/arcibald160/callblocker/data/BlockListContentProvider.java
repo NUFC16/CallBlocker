@@ -17,6 +17,7 @@ public class BlockListContentProvider extends ContentProvider {
     public static final int BLOCKED_NUMBERS_WITH_ID = 101;
     public static final int BLOCKED_NUMBERS_WITH_TIME = 102;
     public static final int BLOCKED_NUMBERS_WITH_DATE = 103;
+    public static final int BLOCKED_CALLS = 104;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -24,6 +25,7 @@ public class BlockListContentProvider extends ContentProvider {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS, BLOCKED_NUMBERS);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/#", BLOCKED_NUMBERS_WITH_ID);
+        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_CALLS, BLOCKED_CALLS);
 //        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/time/#", BLOCKED_NUMBERS_WITH_TIME);
 //        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/date/#", BLOCKED_NUMBERS_WITH_DATE);
         return uriMatcher;
@@ -56,6 +58,16 @@ public class BlockListContentProvider extends ContentProvider {
             case BLOCKED_NUMBERS:
                 retCursor =  db.query(
                         BlockListContract.BlockListEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case BLOCKED_CALLS:
+                retCursor =  db.query(
+                        BlockListContract.BlockedCallsReceived.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -112,6 +124,14 @@ public class BlockListContentProvider extends ContentProvider {
                 long id = db.insert(BlockListContract.BlockListEntry.TABLE_NAME, null, contentValues);
                 if ( id > 0 ) {
                     returnUri = ContentUris.withAppendedId(BlockListContract.BlockListEntry.CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            case BLOCKED_CALLS:
+                id = db.insert(BlockListContract.BlockedCallsReceived.TABLE_NAME, null, contentValues);
+                if ( id > 0 ) {
+                    returnUri = ContentUris.withAppendedId(BlockListContract.BlockedCallsReceived.CONTENT_URI, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }

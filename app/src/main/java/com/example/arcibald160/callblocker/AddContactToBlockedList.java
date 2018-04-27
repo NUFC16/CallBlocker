@@ -64,13 +64,6 @@ public class AddContactToBlockedList extends AppCompatActivity {
                  * Sets the values of each column and inserts the word. The arguments to the "put"
                  * method are "column name" and "value"
                  */
-//                Date dt = new Date();
-//
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-//
-//                String date = dateFormat.format(dt);
-//                String time = timeFormat.format(dt);
 
                 mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_NUMBER, mBlockedNumberView.getText().toString());
 

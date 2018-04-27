@@ -9,10 +9,6 @@ import android.view.ViewGroup;
 
 import com.example.arcibald160.callblocker.R;
 
-/**
- * Created by arcibald160 on 27.03.18..
- */
-
 public class Tab3Fragment extends Fragment {
     @Nullable
     @Override

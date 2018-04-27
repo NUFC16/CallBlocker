@@ -23,4 +23,5 @@
     <!-- IMAGE DESCRIPTION -->
     <string name="contact_img_desc">Contact image</string>
     <string name="remove_img_desc">Remove blocked number</string>
+    <string name="missed_call_img_desc">Blocked call</string>
 </resources>
