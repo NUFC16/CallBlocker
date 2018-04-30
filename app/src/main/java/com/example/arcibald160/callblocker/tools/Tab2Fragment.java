@@ -23,7 +23,7 @@ import com.example.arcibald160.callblocker.data.BlockListContract;
 
 public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int LOADER_ID = 1100;
+    private static final int LOADER_ID = 1200;
 
     private RecyclerView mRecyclerView;
     private Tab2CustomAdapter mAdapter;

@@ -24,4 +24,17 @@
     <string name="contact_img_desc">Contact image</string>
     <string name="remove_img_desc">Remove blocked number</string>
     <string name="missed_call_img_desc">Blocked call</string>
+
+    <!-- Days of week -->
+    <string name="monday">Mo</string>
+    <string name="tuesday">Tu</string>
+    <string name="wednesday">We</string>
+    <string name="thursday">Th</string>
+    <string name="friday">Fr</string>
+    <string name="saturday">Sa</string>
+    <string name="sunday">Su</string>
+
+    <string name="label_time_from">Time from</string>
+    <string name="label_time_until">Time until</string>
+    <string name="submit_timetable">Set</string>
 </resources>

@@ -36,6 +36,7 @@
             android:exported="false" />
 
         <activity android:name=".AddContactToBlockedList"></activity>
+        <activity android:name=".AddNewBlockedTimetable"></activity>
     </application>
 
 </manifest>
