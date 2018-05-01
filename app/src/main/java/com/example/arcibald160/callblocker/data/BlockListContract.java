@@ -14,6 +14,7 @@ public class BlockListContract {
     // This is the path for the "numbers" directory
     public static final String PATH_BLOCKED_NUMBERS = "numbers";
     public static final String PATH_BLOCKED_CALLS = "calls";
+    public static final String PATH_BLOCKED_TIMETABLE = "timetable";
 
     /* BlockListEntry is an inner class that defines the contents of the blocked calls table */
     public static final class BlockListEntry implements BaseColumns {
@@ -42,5 +43,24 @@ public class BlockListContract {
                 COLUMN_NAME = "contact_name",
                 COLUMN_TIME = "time",
                 COLUMN_DATE = "date";
+    }
+
+    public static final class BlockedTimetable implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BLOCKED_TIMETABLE).build();
+
+        public static final String TABLE_NAME = "blocked_timetable";
+
+        public static final String
+                COLUMN_TIME_FROM = "time_from",
+                COLUMN_TIME_UNTIL = "time_until",
+                COLUMN_MONDAY = "monday",
+                COLUMN_TUESDAY = "tuesday",
+                COLUMN_WEDNESDAY = "wednesday",
+                COLUMN_THURSDAY = "thursday",
+                COLUMN_FRIDAY = "friday",
+                COLUMN_SATURDAY = "saturday",
+                COLUMN_SUNDAY = "sunday";
     }
 }

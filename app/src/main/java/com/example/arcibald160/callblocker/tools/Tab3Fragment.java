@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,8 +18,9 @@ import android.view.ViewGroup;
 import com.example.arcibald160.callblocker.AddNewBlockedTimetable;
 import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.Tab3CustomAdapter;
+import com.example.arcibald160.callblocker.data.BlockListContract;
 
-public class Tab3Fragment extends Fragment {
+public class Tab3Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOADER_ID = 1300;
 
@@ -27,6 +31,9 @@ public class Tab3Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tab3_fragment, container, false);
+
+        // needed for querying existing data
+        getActivity().getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         // Recycler view
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_tab3);
@@ -52,5 +59,25 @@ public class Tab3Fragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getContext(),
+                BlockListContract.BlockedTimetable.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {mAdapter.updateData(data);}
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.updateData(null);
     }
 }

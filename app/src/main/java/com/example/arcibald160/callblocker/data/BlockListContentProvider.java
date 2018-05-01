@@ -18,6 +18,8 @@ public class BlockListContentProvider extends ContentProvider {
     public static final int BLOCKED_NUMBERS_WITH_TIME = 102;
     public static final int BLOCKED_NUMBERS_WITH_DATE = 103;
     public static final int BLOCKED_CALLS = 104;
+    public static final int BLOCKED_TIMETABLE = 105;
+    public static final int BLOCKED_TIMETABLE_WITH_ID = 106;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -26,6 +28,8 @@ public class BlockListContentProvider extends ContentProvider {
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS, BLOCKED_NUMBERS);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/#", BLOCKED_NUMBERS_WITH_ID);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_CALLS, BLOCKED_CALLS);
+        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_TIMETABLE, BLOCKED_TIMETABLE);
+        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_TIMETABLE + "/#", BLOCKED_TIMETABLE_WITH_ID);
 //        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/time/#", BLOCKED_NUMBERS_WITH_TIME);
 //        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/date/#", BLOCKED_NUMBERS_WITH_DATE);
         return uriMatcher;
@@ -68,6 +72,16 @@ public class BlockListContentProvider extends ContentProvider {
             case BLOCKED_CALLS:
                 retCursor =  db.query(
                         BlockListContract.BlockedCallsReceived.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case BLOCKED_TIMETABLE:
+                retCursor =  db.query(
+                        BlockListContract.BlockedTimetable.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -136,6 +150,14 @@ public class BlockListContentProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
+            case BLOCKED_TIMETABLE:
+                id = db.insert(BlockListContract.BlockedTimetable.TABLE_NAME, null, contentValues);
+                if ( id > 0 ) {
+                    returnUri = ContentUris.withAppendedId(BlockListContract.BlockedTimetable.CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -164,6 +186,12 @@ public class BlockListContentProvider extends ContentProvider {
                 String id = uri.getPathSegments().get(1);
                 // Use selections/selectionArgs to filter for this ID
                 tasksDeleted = db.delete(BlockListContract.BlockListEntry.TABLE_NAME, "_id=?", new String[]{id});
+                break;
+            case BLOCKED_TIMETABLE_WITH_ID:
+                /// Get the task ID from the URI path
+                id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                tasksDeleted = db.delete(BlockListContract.BlockedTimetable.TABLE_NAME, "_id=?", new String[]{id});
                 break;
             // Set the value for the returnedUri and write the default case for unknown URI's
             // Default case throws an UnsupportedOperationException

@@ -35,6 +35,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
-        editText.setText(hours + ":" + minutes);
+        String min = (minutes < 10) ? "0" + minutes: Integer.toString(minutes);
+        editText.setText(hours + ":" + min);
     }
 }

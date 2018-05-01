@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.arcibald160.callblocker.data.BlockListContract;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,11 +18,11 @@ import java.util.List;
 public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.BlockAllTimetableHolder> {
     private Context mContext;
     private Cursor mCursor;
-    private List<String> mPrefDataList = new ArrayList<>(Arrays.asList("joso", "miro"));
 
     public Tab3CustomAdapter(Context context) {
         mContext = context;
     }
+
     @Override
     public Tab3CustomAdapter.BlockAllTimetableHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.blockall_timetable_view, parent, false);
@@ -30,19 +32,28 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
     @Override
     public void onBindViewHolder(Tab3CustomAdapter.BlockAllTimetableHolder holder, int position) {
 
-//        mCursor.moveToPosition(position);
-        String current = mPrefDataList.get(position);
+        int idIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable._ID);
+        int timeFromIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable.COLUMN_TIME_FROM);
+        int timeUntilIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL);
+
+        mCursor.moveToPosition(position);
+
+        final int id = mCursor.getInt(idIndex);
+        String timeFrom = mCursor.getString(timeFromIndex);
+        String timeUntil = mCursor.getString(timeUntilIndex);
+
         //Set values
-        holder.blockallTimeUntil.setTag("8:01");
-        holder.blockAllTimeFrom.setText("12:04");
+        holder.itemView.setTag(id);
+        holder.blockAllTimeFrom.setText(timeFrom);
+        holder.blockAllTimeUntil.setText(timeUntil);
     }
 
     @Override
     public int getItemCount() {
-        if (mPrefDataList == null) {
+        if (mCursor == null) {
             return 0;
         }
-        return mPrefDataList.size();
+        return mCursor.getCount();
     }
 
     public Cursor updateData(Cursor c) {
@@ -62,12 +73,12 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
 
     public class BlockAllTimetableHolder extends RecyclerView.ViewHolder {
 
-        TextView blockAllTimeFrom, blockallTimeUntil;
+        TextView blockAllTimeFrom, blockAllTimeUntil;
         public BlockAllTimetableHolder(View itemView) {
             super(itemView);
 
             blockAllTimeFrom = (TextView) itemView.findViewById(R.id.blocktime_from_id);
-            blockallTimeUntil = (TextView) itemView.findViewById(R.id.blocktime_until_id);
+            blockAllTimeUntil = (TextView) itemView.findViewById(R.id.blocktime_until_id);
         }
     }
 }

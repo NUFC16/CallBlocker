@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.arcibald160.callblocker.AddNewBlockedTimetable"
+    android:id="@+id/timetable_root_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
