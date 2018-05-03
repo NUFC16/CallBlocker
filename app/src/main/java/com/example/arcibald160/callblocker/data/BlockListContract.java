@@ -62,5 +62,17 @@ public class BlockListContract {
                 COLUMN_FRIDAY = "friday",
                 COLUMN_SATURDAY = "saturday",
                 COLUMN_SUNDAY = "sunday";
+
+        public static String[] getDaysOfWeekColumns() {
+            return new String[] {
+                    BlockListContract.BlockedTimetable.COLUMN_MONDAY,
+                    BlockListContract.BlockedTimetable.COLUMN_TUESDAY,
+                    BlockListContract.BlockedTimetable.COLUMN_WEDNESDAY,
+                    BlockListContract.BlockedTimetable.COLUMN_THURSDAY,
+                    BlockListContract.BlockedTimetable.COLUMN_FRIDAY,
+                    BlockListContract.BlockedTimetable.COLUMN_SATURDAY,
+                    BlockListContract.BlockedTimetable.COLUMN_SUNDAY
+            };
+        }
     }
 }

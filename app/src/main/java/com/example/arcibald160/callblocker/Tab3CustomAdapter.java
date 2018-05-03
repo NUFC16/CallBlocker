@@ -1,18 +1,16 @@
 package com.example.arcibald160.callblocker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.BlockAllTimetableHolder> {
@@ -36,16 +34,45 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
         int timeFromIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable.COLUMN_TIME_FROM);
         int timeUntilIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL);
 
+        final String [] daysOfWeekColumns = BlockListContract.BlockedTimetable.getDaysOfWeekColumns();
+        final int daysLength = daysOfWeekColumns.length;
+        int [] daysOfWeekIndices = new int[daysLength];
+
+
+        for(int i=0; i<daysLength; i++) {
+            daysOfWeekIndices[i] = mCursor.getColumnIndex(daysOfWeekColumns[i]);
+        }
+
         mCursor.moveToPosition(position);
 
         final int id = mCursor.getInt(idIndex);
-        String timeFrom = mCursor.getString(timeFromIndex);
-        String timeUntil = mCursor.getString(timeUntilIndex);
+        final String timeFrom = mCursor.getString(timeFromIndex);
+        final String timeUntil = mCursor.getString(timeUntilIndex);
+
+        final String [] daysOfWeekValues = new String[daysLength];
+        for(int i=0; i<daysLength; i++) {
+            daysOfWeekValues[i] = mCursor.getString(daysOfWeekIndices[i]);
+        }
 
         //Set values
         holder.itemView.setTag(id);
         holder.blockAllTimeFrom.setText(timeFrom);
         holder.blockAllTimeUntil.setText(timeUntil);
+        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, AddNewBlockedTimetable.class);
+                // use existing strings in db helper so everything is on the same place
+                intent.putExtra(BlockListContract.BlockedTimetable._ID, id);
+                intent.putExtra(BlockListContract.BlockedTimetable.COLUMN_TIME_FROM, timeFrom);
+                intent.putExtra(BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL, timeUntil);
+
+                for(int i=0; i<daysLength; i++) {
+                    intent.putExtra(daysOfWeekColumns[i], daysOfWeekValues[i]);
+                }
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -74,11 +101,14 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
     public class BlockAllTimetableHolder extends RecyclerView.ViewHolder {
 
         TextView blockAllTimeFrom, blockAllTimeUntil;
+        LinearLayout parentLayout;
+
         public BlockAllTimetableHolder(View itemView) {
             super(itemView);
 
             blockAllTimeFrom = (TextView) itemView.findViewById(R.id.blocktime_from_id);
             blockAllTimeUntil = (TextView) itemView.findViewById(R.id.blocktime_until_id);
+            parentLayout = (LinearLayout) itemView.findViewById(R.id.timetable_layout_id);
         }
     }
 }

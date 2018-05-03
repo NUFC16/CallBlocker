@@ -210,6 +210,31 @@ public class BlockListContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+        final SQLiteDatabase db = mBlockListDbHelper.getWritableDatabase();
+        // starts as 0
+        int tasksUpdated;
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case BLOCKED_TIMETABLE_WITH_ID:
+                /// Get the task ID from the URI path
+                String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                tasksUpdated = db.update(BlockListContract.BlockedTimetable.TABLE_NAME, contentValues, "_id=?", new String[]{id});
+                break;
+            // Set the value for the returnedUri and write the default case for unknown URI's
+            // Default case throws an UnsupportedOperationException
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        // Notify the resolver of a change and return the number of items deleted
+        if (tasksUpdated != 0) {
+            // A task was deleted, set notification
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return tasksUpdated;
     }
 }

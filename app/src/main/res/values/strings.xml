@@ -37,4 +37,5 @@
     <string name="label_time_from">Time from</string>
     <string name="label_time_until">Time until</string>
     <string name="submit_timetable">Set</string>
+    <string name="switch_text">Activate</string>
 </resources>

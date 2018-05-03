@@ -119,12 +119,13 @@
         android:id="@+id/toggle_friday"
         android:layout_width="50dp"
         android:layout_height="30dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/day_toggle_button"
         android:text="@string/friday"
         android:textOff="@string/friday"
         android:textOn="@string/friday"
         app:layout_constraintEnd_toStartOf="@+id/toggle_tuesday"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toEndOf="@+id/toggle_monday"
         app:layout_constraintTop_toBottomOf="@+id/toggle_monday" />
 
@@ -163,5 +164,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/timetable_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/switch_text"
+        android:checked="true"
+        app:layout_constraintEnd_toEndOf="@+id/toggle_sunday"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="@+id/toggle_friday"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_saturday" />
 
 </android.support.constraint.ConstraintLayout>
