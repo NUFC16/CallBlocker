@@ -53,6 +53,7 @@ public class BlockListContract {
         public static final String TABLE_NAME = "blocked_timetable";
 
         public static final String
+                COLUMN_IS_ACTIVATED = "is_activated",
                 COLUMN_TIME_FROM = "time_from",
                 COLUMN_TIME_UNTIL = "time_until",
                 COLUMN_MONDAY = "monday",

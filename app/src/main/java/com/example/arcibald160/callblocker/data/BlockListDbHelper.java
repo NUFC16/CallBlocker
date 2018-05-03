@@ -9,7 +9,7 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "blockedNumbersDb.db";
 
     // If you change the database schema, you must increment the database version
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
 
     // Constructor
@@ -39,6 +39,7 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
 
         final String CREATE_TABLE_BLOCKED_TIMETABLE = "CREATE TABLE "  + BlockListContract.BlockedTimetable.TABLE_NAME + " (" +
                 BlockListContract.BlockedTimetable._ID + " INTEGER PRIMARY KEY, " +
+                BlockListContract.BlockedTimetable.COLUMN_IS_ACTIVATED + " BOOLEAN NOT NULL DEFAULT 0," +
                 BlockListContract.BlockedTimetable.COLUMN_TIME_FROM + " TIME NOT NULL, " +
                 BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL    + " TIME NOT NULL ," +
                 BlockListContract.BlockedTimetable.COLUMN_MONDAY + " BOOLEAN NOT NULL DEFAULT 0, " +
@@ -50,8 +51,8 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
                 BlockListContract.BlockedTimetable.COLUMN_SUNDAY + " BOOLEAN NOT NULL DEFAULT 0);";
 
 
-        db.execSQL(CREATE_TABLE_BLOCKED_NUMBERS);
-        db.execSQL(CREATE_TABLE_BLOCKED_CALLS);
+//        db.execSQL(CREATE_TABLE_BLOCKED_NUMBERS);
+//        db.execSQL(CREATE_TABLE_BLOCKED_CALLS);
         db.execSQL(CREATE_TABLE_BLOCKED_TIMETABLE);
     }
 
@@ -62,8 +63,8 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockListEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedCallsReceived.TABLE_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockListEntry.TABLE_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedCallsReceived.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedTimetable.TABLE_NAME);
         onCreate(db);
     }

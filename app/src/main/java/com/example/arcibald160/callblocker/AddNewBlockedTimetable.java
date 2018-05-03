@@ -1,6 +1,7 @@
 package com.example.arcibald160.callblocker;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
+import com.example.arcibald160.callblocker.tools.CursorHelper;
 import com.example.arcibald160.callblocker.tools.TimePickerFragment;
 
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import java.util.List;
 public class AddNewBlockedTimetable extends AppCompatActivity {
 
     EditText mEditTimeFrom, mEditTimeUntil;
+    Switch mIsActivated;
     Button mSubmitButton;
 
     private GestureDetector gestureDetector;
@@ -36,9 +40,13 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
 
         mEditTimeFrom = (EditText) findViewById(R.id.edit_time_from);
         mEditTimeUntil = (EditText) findViewById(R.id.edit_time_until);
+        mIsActivated = (Switch)  findViewById(R.id.timetable_switch);
         mSubmitButton = (Button) findViewById(R.id.submit_button);
 
-        populateWithExistingData();
+        // update / add
+        if (getIntent().hasExtra(BlockListContract.BlockedTimetable._ID)) {
+            populateWithExistingData();
+        }
 
         // trigger only on one click
         gestureDetector = new GestureDetector(this, new SingleTapConfirm());
@@ -97,42 +105,34 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         }
     }
 
-    // find whole hierarchy tree
-    private List<View> getAllChildrenBFS(View v) {
-        List<View> visited = new ArrayList<View>();
-        List<View> unvisited = new ArrayList<View>();
-        unvisited.add(v);
-
-        while (!unvisited.isEmpty()) {
-            View child = unvisited.remove(0);
-            visited.add(child);
-            if (!(child instanceof ViewGroup)) continue;
-            ViewGroup group = (ViewGroup) child;
-            final int childCount = group.getChildCount();
-            for (int i=0; i<childCount; i++) unvisited.add(group.getChildAt(i));
-        }
-
-        return visited;
-    }
-
     private void populateWithExistingData() {
+        int id = getIntent().getIntExtra(BlockListContract.BlockedTimetable._ID, 0);
+        Cursor result = getApplicationContext().getContentResolver().query(
+                BlockListContract.BlockedTimetable.CONTENT_URI, null,
+                "_id=?",
+                new String[]{Integer.toString(id)},
+                null
+        );
 
-        if (getIntent().hasExtra(BlockListContract.BlockedTimetable.COLUMN_TIME_FROM)) {
-            mEditTimeFrom.setText(getIntent().getStringExtra(BlockListContract.BlockedTimetable.COLUMN_TIME_FROM));
-        }
+        if (result != null) {
 
-        if (getIntent().hasExtra(BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL)) {
-            mEditTimeUntil.setText(getIntent().getStringExtra(BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL));
-        }
+            result.moveToFirst();
+            CursorHelper cHelper = new CursorHelper(result);
 
-        final String [] daysOfWeekColumns = BlockListContract.BlockedTimetable.getDaysOfWeekColumns();
-        final int daysLength = daysOfWeekColumns.length;
-        ArrayList<ToggleButton> allToggleButtons = getToggleButtons();
-        for(int i=0; i<daysLength; i++) {
-            if(getIntent().hasExtra(daysOfWeekColumns[i])) {
-                boolean checkedState = (getIntent().getStringExtra(daysOfWeekColumns[i]).equals("1")) ? true:false;
+            // set text for time from and until
+            mEditTimeFrom.setText(cHelper.timeFrom);
+            mEditTimeUntil.setText(cHelper.timeUntil);
+
+            // set state of toggle buttons
+            boolean checkedState;
+            ArrayList<ToggleButton> allToggleButtons = getToggleButtons();
+            int [] daysOfWeekIndices = cHelper.getDaysOfWeekIndices();
+            for(int i=0; i<daysOfWeekIndices.length; i++) {
+                checkedState = (result.getString(daysOfWeekIndices[i]).equals("1")) ? true:false;
                 allToggleButtons.get(i).setChecked(checkedState);
             }
+            // set state of is_active switch
+            mIsActivated.setChecked(cHelper.is_activated());
         }
     }
 
@@ -155,11 +155,14 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
             throw new RuntimeException("Toggle buttons and database data are not the same length!");
         }
 
+        int booleanParse;
         for (int i = 0; i < allToggleButtons.size(); i++) {
-            int booleanParse = (allToggleButtons.get(i)).isChecked() ? 1:0;
+            booleanParse = (allToggleButtons.get(i)).isChecked() ? 1:0;
             dbContentValues.put(contentProviderAttributes[i], Integer.toString(booleanParse));
         }
 
+        booleanParse = mIsActivated.isChecked() ? 1:0;
+        dbContentValues.put(BlockListContract.BlockedTimetable.COLUMN_IS_ACTIVATED, booleanParse);
         return dbContentValues;
     }
 
@@ -167,13 +170,14 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         // insert data in content provider
         int id = getIntent().getIntExtra(BlockListContract.BlockedTimetable._ID, 0);
         Uri uri = BlockListContract.BlockedTimetable.CONTENT_URI.buildUpon().appendPath(Integer.toString(id)).build();
-        int returnUri = getApplicationContext().getContentResolver().update(
+        int returnValue = getApplicationContext().getContentResolver().update(
                 uri,                        // the user dictionary content URI
                 getDbValuesToBeInserted(),  // the values to insert
                 null,
                 null
         );
     }
+
     // find all monday-sunday toggle buttons
     private void addDataToBlockedTimetable(){
         // insert data in content provider
@@ -181,6 +185,24 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
                 BlockListContract.BlockedTimetable.CONTENT_URI,   // the user dictionary content URI
                 getDbValuesToBeInserted()                          // the values to insert
         );
+    }
+
+    // find whole hierarchy tree
+    private List<View> getAllChildrenBFS(View v) {
+        List<View> visited = new ArrayList<View>();
+        List<View> unvisited = new ArrayList<View>();
+        unvisited.add(v);
+
+        while (!unvisited.isEmpty()) {
+            View child = unvisited.remove(0);
+            visited.add(child);
+            if (!(child instanceof ViewGroup)) continue;
+            ViewGroup group = (ViewGroup) child;
+            final int childCount = group.getChildCount();
+            for (int i=0; i<childCount; i++) unvisited.add(group.getChildAt(i));
+        }
+
+        return visited;
     }
 
     private ArrayList<ToggleButton> getToggleButtons() {
