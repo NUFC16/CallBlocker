@@ -31,6 +31,8 @@
         android:layout_marginRight="50dp"
         android:clickable="true"
         android:focusable="true"
+        android:tint="@color/white"
+        android:backgroundTint="@color/green"
         app:srcCompat="@android:drawable/ic_input_add" />
 </RelativeLayout>
 

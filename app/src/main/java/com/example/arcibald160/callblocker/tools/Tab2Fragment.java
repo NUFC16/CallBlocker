@@ -1,5 +1,6 @@
 package com.example.arcibald160.callblocker.tools;
 
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.arcibald160.callblocker.AddContactToBlockedList;
 import com.example.arcibald160.callblocker.Tab2CustomAdapter;
@@ -21,12 +23,13 @@ import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 
-public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener {
 
     private static final int LOADER_ID = 1200;
 
     private RecyclerView mRecyclerView;
     private Tab2CustomAdapter mAdapter;
+    private SearchView mSearchView;
 
     @Nullable
     @Override
@@ -38,6 +41,10 @@ public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallba
 
         // floating action button for adding new number on block list
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.add_blocked_id);
+
+        // Get the SearchView and set the searchable configuration
+        mSearchView = (SearchView) view.findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +74,21 @@ public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallba
     // CursorLoader for displaying data from content provider
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection = null;
+        String[] selectionArgs = null;
+
+        if (args != null) {
+            selection = BlockListContract.BlockListEntry.COLUMN_NAME + " LIKE ? OR " +
+                    BlockListContract.BlockListEntry.COLUMN_NUMBER + " LIKE ?";
+            String userInput = '%' + args.getString("search_string") + '%';
+            selectionArgs = new String[] { userInput, userInput};
+        }
         return new CursorLoader(
                 getContext(),
                 BlockListContract.BlockListEntry.CONTENT_URI,
                 null,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null
         );
     }
@@ -85,5 +101,21 @@ public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.updateData(null);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        Bundle bundle = new Bundle();
+        bundle.putString("search_string", s);
+        getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, bundle, this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        Bundle bundle = new Bundle();
+        bundle.putString("search_string", s);
+        getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, bundle, this);
+        return true;
     }
 }

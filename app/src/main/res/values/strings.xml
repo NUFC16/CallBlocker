@@ -13,6 +13,7 @@
     <string name="name_label">Name</string>
     <string name="contacts_button_label">Pick from contacts</string>
     <string name="blocked_button_label">Add to blocked list</string>
+    <string name="search_blocked_hint">Input contact name or number to query</string>
 
     <!-- Toast validation warning -->
     <string name="enter_number">Please enter a number</string>
@@ -34,6 +35,7 @@
     <string name="saturday">Sa</string>
     <string name="sunday">Su</string>
 
+    <!-- Timetable view -->
     <string name="label_time_from">Time from</string>
     <string name="label_time_until">Time until</string>
     <string name="submit_timetable">Set</string>

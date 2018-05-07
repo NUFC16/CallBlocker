@@ -1,10 +1,14 @@
 package com.example.arcibald160.callblocker;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +47,9 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
         holder.blockAllTimeFrom.setText(cHelper.timeFrom);
         holder.blockAllTimeUntil.setText(cHelper.timeUntil);
         holder.switchIsActive.setChecked(cHelper.is_activated());
+
+        final Uri uriWithId = BlockListContract.BlockedTimetable.CONTENT_URI.buildUpon().appendPath(Integer.toString(cHelper.id)).build();
+
         holder.switchIsActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -53,21 +60,54 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
                 int booleanParse = isChecked ? 1:0;
                 dbContentValues.put(BlockListContract.BlockedTimetable.COLUMN_IS_ACTIVATED, booleanParse);
 
-                Uri uri = BlockListContract.BlockedTimetable.CONTENT_URI.buildUpon().appendPath(Integer.toString(cHelper.id)).build();
+
                 int returnVal = mContext.getContentResolver().update(
-                        uri,                        // the user dictionary content URI
-                        dbContentValues,            // the values to insert
+                        uriWithId,                        // the user dictionary content URI
+                        dbContentValues,
                         null,
                         null
                 );
             }
         });
+
+        // update
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, AddNewBlockedTimetable.class);
                 intent.putExtra(BlockListContract.BlockedTimetable._ID, cHelper.id);
                 mContext.startActivity(intent);
+            }
+        });
+
+        // delete
+        holder.parentLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(mContext);
+                }
+
+                builder.setTitle("Delete entry")
+                        .setMessage("Are you sure you want to delete this entry?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mContext.getContentResolver().delete(uriWithId, null, null);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+                return true;
             }
         });
     }

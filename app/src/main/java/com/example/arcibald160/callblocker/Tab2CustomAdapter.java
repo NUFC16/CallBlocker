@@ -1,7 +1,7 @@
 package com.example.arcibald160.callblocker;
-
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +16,7 @@ public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.Bl
     private Context mContext;
     // Class variables for the Cursor that holds blocked calls data
     private Cursor mCursor;
+    private int selectedPos = RecyclerView.NO_POSITION;
 
     public Tab2CustomAdapter(Context context) {
         mContext = context;
@@ -31,6 +32,9 @@ public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.Bl
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final BlockedViewHolder holder, int position) {
+        // Here I am just highlighting the background
+        holder.itemView.setBackgroundColor(selectedPos == position ? Color.LTGRAY : Color.TRANSPARENT);
+
         int idIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry._ID);
         int nameIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NAME);
         int numberIndex = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NUMBER);
@@ -92,7 +96,7 @@ public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.Bl
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public class BlockedViewHolder extends RecyclerView.ViewHolder {
+    public class BlockedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         // each data item is just a string in this case
         TextView blockedNameView;
         TextView blockedNumberView;
@@ -100,10 +104,25 @@ public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.Bl
 
         public BlockedViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
 
             removeBlockedImageView = (ImageView) itemView.findViewById(R.id.remove_blocked_contact_id);
             blockedNameView = (TextView) itemView.findViewById(R.id.blocked_name_id);
             blockedNumberView = (TextView) itemView.findViewById(R.id.blocked_number_id);
+        }
+
+        @Override
+        public void onClick(View v) {
+            // Below line is just like a safety check, because sometimes holder could be null,
+            // in that case, getAdapterPosition() will return RecyclerView.NO_POSITION
+            if (getAdapterPosition() == RecyclerView.NO_POSITION) return;
+
+            // Updating old as well as new positions
+            notifyItemChanged(selectedPos);
+            selectedPos = getAdapterPosition();
+            notifyItemChanged(selectedPos);
+
+            // Do your another stuff for your onClick
         }
     }
 }
