@@ -18,7 +18,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
-import com.example.arcibald160.callblocker.tools.CursorHelper;
+import com.example.arcibald160.callblocker.tools.CursorTimetableHelper;
 import com.example.arcibald160.callblocker.tools.TimePickerFragment;
 
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         if (result != null) {
 
             result.moveToFirst();
-            CursorHelper cHelper = new CursorHelper(result);
+            CursorTimetableHelper cHelper = new CursorTimetableHelper(result);
 
             // set text for time from and until
             mEditTimeFrom.setText(cHelper.timeFrom);
@@ -136,7 +136,7 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         }
     }
 
-    private ContentValues getDbValuesToBeInserted() {
+    private ContentValues getDbValues() {
         // Defines an object to contain the new values to insert
         ContentValues dbContentValues = new ContentValues();
 
@@ -145,7 +145,8 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         dbContentValues.put(BlockListContract.BlockedTimetable.COLUMN_TIME_UNTIL, mEditTimeUntil.getText().toString());
 
         // insert toggle buttons state
-        //get all elements
+
+        // get all elements
         String [] contentProviderAttributes = BlockListContract.BlockedTimetable.getDaysOfWeekColumns();
 
         // here must be exactly 7 toggle buttons -> like 7 days
@@ -171,8 +172,8 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         int id = getIntent().getIntExtra(BlockListContract.BlockedTimetable._ID, 0);
         Uri uri = BlockListContract.BlockedTimetable.CONTENT_URI.buildUpon().appendPath(Integer.toString(id)).build();
         int returnValue = getApplicationContext().getContentResolver().update(
-                uri,                        // the user dictionary content URI
-                getDbValuesToBeInserted(),  // the values to insert
+                uri,
+                getDbValues(),  // the values to update
                 null,
                 null
         );
@@ -182,8 +183,8 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
     private void addDataToBlockedTimetable(){
         // insert data in content provider
         Uri returnUri = getApplicationContext().getContentResolver().insert(
-                BlockListContract.BlockedTimetable.CONTENT_URI,   // the user dictionary content URI
-                getDbValuesToBeInserted()                          // the values to insert
+                BlockListContract.BlockedTimetable.CONTENT_URI,
+                getDbValues() // the values to insert
         );
     }
 

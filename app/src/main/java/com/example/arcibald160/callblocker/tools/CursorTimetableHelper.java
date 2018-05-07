@@ -4,7 +4,7 @@ import android.database.Cursor;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
-public class CursorHelper {
+public class CursorTimetableHelper {
 
     private Cursor mCursor;
     private int idIndex, timeFromIndex, timeUntilIndex, isActivatedIndex;
@@ -13,7 +13,7 @@ public class CursorHelper {
     public String timeFrom, timeUntil;
 
     // you must move cursor to position yourself
-    public CursorHelper(Cursor cursor) {
+    public CursorTimetableHelper(Cursor cursor) {
         mCursor = cursor;
         idIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable._ID);
         timeFromIndex = mCursor.getColumnIndex(BlockListContract.BlockedTimetable.COLUMN_TIME_FROM);

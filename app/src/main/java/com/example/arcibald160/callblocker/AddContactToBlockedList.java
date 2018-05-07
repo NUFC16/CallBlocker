@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
+import com.example.arcibald160.callblocker.tools.CursorContactsHelper;
 
 public class AddContactToBlockedList extends AppCompatActivity {
 
@@ -35,6 +36,11 @@ public class AddContactToBlockedList extends AppCompatActivity {
         mContactsButton = (Button) findViewById(R.id.contacts_button_id);
         mAddButton = (Button) findViewById(R.id.add_blocked_button_id);
 
+        // update / add
+        if (getIntent().hasExtra(BlockListContract.BlockListEntry._ID)) {
+            populateWithExistingData();
+        }
+
         mContactsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,34 +60,20 @@ public class AddContactToBlockedList extends AppCompatActivity {
                 if (TextUtils.isEmpty(mBlockedNumberView.getText().toString())) {
                     Toast.makeText(getApplicationContext(), getString(R.string.enter_number), Toast.LENGTH_LONG).show();
                 }
-                // Defines a new Uri object that receives the result of the insertion
-                Uri mNewUri;
 
-                // Defines an object to contain the new values to insert
-                ContentValues mNewBlockedNumber = new ContentValues();
-
-                /*
-                 * Sets the values of each column and inserts the word. The arguments to the "put"
-                 * method are "column name" and "value"
-                 */
-
-                mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_NUMBER, mBlockedNumberView.getText().toString());
-
-                if (!TextUtils.isEmpty(mBlockedNameView.getText().toString())) {
-                    mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_NAME, mBlockedNameView.getText().toString());
+                // update / add
+                if (getIntent().hasExtra(BlockListContract.BlockListEntry._ID)) {
+                    updateBlockedList();
+                } else {
+                    addToBlockedList();
                 }
-//                mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_DATE, date);
-//                mNewBlockedNumber.put(BlockListContract.BlockListEntry.COLUMN_TIME, time);
 
-                mNewUri = getApplicationContext().getContentResolver().insert(
-                        BlockListContract.BlockListEntry.CONTENT_URI,   // the user dictionary content URI
-                        mNewBlockedNumber                          // the values to insert
-                );
                 finish();
             }
         });
     }
 
+    // get contact info if it is picked from native contact app
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -137,6 +129,60 @@ public class AddContactToBlockedList extends AppCompatActivity {
                     mBlockedNameView.setText(contactName);
                 }
             }
+        }
+    }
+
+    private ContentValues getDbValues() {
+        // Defines an object to contain the new values to insert
+        ContentValues values = new ContentValues();
+
+        values.put(BlockListContract.BlockListEntry.COLUMN_NUMBER, mBlockedNumberView.getText().toString());
+
+        if (!TextUtils.isEmpty(mBlockedNameView.getText().toString())) {
+            values.put(BlockListContract.BlockListEntry.COLUMN_NAME, mBlockedNameView.getText().toString());
+        }
+        
+        return values;
+    }
+
+
+    private void updateBlockedList() {
+       
+        int id = getIntent().getIntExtra(BlockListContract.BlockListEntry._ID, 0);
+        Uri uri = BlockListContract.BlockListEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(id)).build();
+        int returnValue = getApplicationContext().getContentResolver().update(
+                uri,
+                getDbValues(),
+                null,
+                null
+        );
+    }
+
+    private void addToBlockedList() {
+        // Defines a new Uri object that receives the result of the insertion (debug purpose)
+        Uri mNewUri;
+
+        mNewUri = getApplicationContext().getContentResolver().insert(
+                BlockListContract.BlockListEntry.CONTENT_URI,
+                getDbValues()
+        );
+    }
+
+    private void populateWithExistingData() {
+        int id = getIntent().getIntExtra(BlockListContract.BlockListEntry._ID, 0);
+        Cursor result = getApplicationContext().getContentResolver().query(
+                BlockListContract.BlockListEntry.CONTENT_URI, null,
+                "_id=?",
+                new String[]{Integer.toString(id)},
+                null
+        );
+
+        if (result != null) {
+            result.moveToFirst();
+            CursorContactsHelper cHelper = new CursorContactsHelper(result);
+
+            mBlockedNameView.setText(cHelper.contactName);
+            mBlockedNumberView.setText(cHelper.contactNumber);
         }
     }
 }

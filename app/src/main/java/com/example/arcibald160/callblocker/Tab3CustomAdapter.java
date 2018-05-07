@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.arcibald160.callblocker.data.BlockListContract;
-import com.example.arcibald160.callblocker.tools.CursorHelper;
+import com.example.arcibald160.callblocker.tools.CursorTimetableHelper;
 
 
 public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.BlockAllTimetableHolder> {
@@ -40,7 +39,7 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
     @Override
     public void onBindViewHolder(Tab3CustomAdapter.BlockAllTimetableHolder holder, int position) {
         mCursor.moveToPosition(position);
-        final CursorHelper cHelper = new CursorHelper(mCursor);
+        final CursorTimetableHelper cHelper = new CursorTimetableHelper(mCursor);
 
         //Set values
         holder.itemView.setTag(cHelper.id);
@@ -60,9 +59,9 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
                 int booleanParse = isChecked ? 1:0;
                 dbContentValues.put(BlockListContract.BlockedTimetable.COLUMN_IS_ACTIVATED, booleanParse);
 
-
+                // update row's switch state
                 int returnVal = mContext.getContentResolver().update(
-                        uriWithId,                        // the user dictionary content URI
+                        uriWithId,
                         dbContentValues,
                         null,
                         null

@@ -217,9 +217,15 @@ public class BlockListContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
 
         switch (match) {
-            case BLOCKED_TIMETABLE_WITH_ID:
+            case BLOCKED_NUMBERS_WITH_ID:
                 /// Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                tasksUpdated = db.update(BlockListContract.BlockListEntry.TABLE_NAME, contentValues, "_id=?", new String[]{id});
+                break;
+            case BLOCKED_TIMETABLE_WITH_ID:
+                /// Get the task ID from the URI path
+                id = uri.getPathSegments().get(1);
                 // Use selections/selectionArgs to filter for this ID
                 tasksUpdated = db.update(BlockListContract.BlockedTimetable.TABLE_NAME, contentValues, "_id=?", new String[]{id});
                 break;
