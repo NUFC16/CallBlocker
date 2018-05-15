@@ -51,8 +51,8 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
                 BlockListContract.BlockedTimetable.COLUMN_SUNDAY + " BOOLEAN NOT NULL DEFAULT 0);";
 
 
-//        db.execSQL(CREATE_TABLE_BLOCKED_NUMBERS);
-//        db.execSQL(CREATE_TABLE_BLOCKED_CALLS);
+        db.execSQL(CREATE_TABLE_BLOCKED_NUMBERS);
+        db.execSQL(CREATE_TABLE_BLOCKED_CALLS);
         db.execSQL(CREATE_TABLE_BLOCKED_TIMETABLE);
     }
 
@@ -63,8 +63,8 @@ public class BlockListDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockListEntry.TABLE_NAME);
-//        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedCallsReceived.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockListEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedCallsReceived.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + BlockListContract.BlockedTimetable.TABLE_NAME);
         onCreate(db);
     }

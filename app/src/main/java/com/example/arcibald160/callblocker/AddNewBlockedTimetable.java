@@ -51,6 +51,7 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         // trigger only on one click
         gestureDetector = new GestureDetector(this, new SingleTapConfirm());
 
+        // time from time picker
         mEditTimeFrom.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -63,6 +64,7 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
             }
         });
 
+        // time until time picker
         mEditTimeUntil.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -97,6 +99,7 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
 
     }
 
+    // prevent timepicker from being called twice (bug)
     private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
 
         @Override
@@ -127,10 +130,12 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
             boolean checkedState;
             ArrayList<ToggleButton> allToggleButtons = getToggleButtons();
             int [] daysOfWeekIndices = cHelper.getDaysOfWeekIndices();
+
             for(int i=0; i<daysOfWeekIndices.length; i++) {
                 checkedState = (result.getString(daysOfWeekIndices[i]).equals("1")) ? true:false;
                 allToggleButtons.get(i).setChecked(checkedState);
             }
+
             // set state of is_active switch
             mIsActivated.setChecked(cHelper.is_activated());
         }

@@ -43,31 +43,23 @@ public class CallBlock extends BroadcastReceiver {
 //            // debug purposes e-is ususally error but this is hack for broadcaste receiver
 //            Log.e(TAG, number);
 
-            Uri uri = BlockListContract.BlockListEntry.CONTENT_URI;
+            BlockChecker blockChecker = new BlockChecker(context, number);
 
-            // search only number column
-            Cursor mCursor = context.getContentResolver().query(
-                    uri,
-                    new String[] {BlockListContract.BlockListEntry.COLUMN_NUMBER},
-                    BlockListContract.BlockListEntry.COLUMN_NUMBER + "=?",
-                     new String[]{ number },
-                    null
-            );
-            // Check, whether this is a member of "Black listed" phone numbers stored in the database
-            if(mCursor.getCount() != 0) {
+            if(blockChecker.canBlock()) {
                 // If yes, invoke the method
                 try {
-                    declinePhone(context);
+                    declinePhone();
                     addToBlockedCallsList(number, context);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            mCursor.close();
+
             return;
         }
     }
 
+    // list of recently blocked calls gets filled here
     private void addToBlockedCallsList(String number, Context context) {
         Date current = new Date();
 
@@ -86,7 +78,7 @@ public class CallBlock extends BroadcastReceiver {
         );
     }
 
-    private void declinePhone(Context context) throws Exception {
+    private void declinePhone() throws Exception {
         try {
             String serviceManagerName = "android.os.ServiceManager";
             String serviceManagerNativeName = "android.os.ServiceManagerNative";
