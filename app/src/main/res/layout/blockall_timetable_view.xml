@@ -8,7 +8,7 @@
     android:id="@+id/timetable_layout_id"
     android:clickable="true"
     android:focusable="true"
-    tools:context="com.example.arcibald160.callblocker.tools.Tab3Fragment">
+    tools:context="com.example.arcibald160.callblocker.tab_fragments.Tab3Fragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

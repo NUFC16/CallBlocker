@@ -13,7 +13,7 @@
     <string name="name_label">Name</string>
     <string name="contacts_button_label">Pick from contacts</string>
     <string name="blocked_button_label">Add to blocked list</string>
-    <string name="search_blocked_hint">Input contact name or number to query</string>
+    <string name="search_blocked_hint">Input contact name or number</string>
 
     <!-- Toast validation warning -->
     <string name="enter_number">Please enter a number</string>
@@ -45,4 +45,7 @@
     <string name="blockall">BlockAllSharedPreferences</string>
     <string name="app_shared_preferences">CallBlockerPrefs</string>
     <string name="stop_blockall">StopBlockAll</string>
+
+    <!-- BlockAllNotification -->
+    <string name="notification_text">All incoming call will be blocked</string>
 </resources>

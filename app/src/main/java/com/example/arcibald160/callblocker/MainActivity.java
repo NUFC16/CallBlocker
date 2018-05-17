@@ -1,14 +1,11 @@
 package com.example.arcibald160.callblocker;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
@@ -18,11 +15,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.arcibald160.callblocker.tools.SectionsPageAdapter;
+import com.example.arcibald160.callblocker.tab_adapters.SectionsPageAdapter;
 import com.example.arcibald160.callblocker.tools.SharedPreferencesHelper;
-import com.example.arcibald160.callblocker.tools.Tab1Fragment;
-import com.example.arcibald160.callblocker.tools.Tab2Fragment;
-import com.example.arcibald160.callblocker.tools.Tab3Fragment;
+import com.example.arcibald160.callblocker.tab_fragments.Tab1Fragment;
+import com.example.arcibald160.callblocker.tab_fragments.Tab2Fragment;
+import com.example.arcibald160.callblocker.tab_fragments.Tab3Fragment;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 

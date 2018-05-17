@@ -1,4 +1,4 @@
-package com.example.arcibald160.callblocker;
+package com.example.arcibald160.callblocker.tab_adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 import java.sql.Time;

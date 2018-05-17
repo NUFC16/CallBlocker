@@ -5,9 +5,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +99,8 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
             }
         });
 
-
+        // back navigation arrow
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     // prevent timepicker from being called twice (bug)
@@ -224,4 +228,16 @@ public class AddNewBlockedTimetable extends AppCompatActivity {
         return buttonList;
     }
 
+
+    //    used for navigating back
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

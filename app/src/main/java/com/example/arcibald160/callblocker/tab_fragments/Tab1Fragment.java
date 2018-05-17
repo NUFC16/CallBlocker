@@ -1,4 +1,4 @@
-package com.example.arcibald160.callblocker.tools;
+package com.example.arcibald160.callblocker.tab_fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.arcibald160.callblocker.R;
-import com.example.arcibald160.callblocker.Tab1CustomAdapter;
+import com.example.arcibald160.callblocker.tab_adapters.Tab1CustomAdapter;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 public class Tab1Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {

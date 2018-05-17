@@ -1,4 +1,4 @@
-package com.example.arcibald160.callblocker.tools;
+package com.example.arcibald160.callblocker.tab_fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.arcibald160.callblocker.AddNewBlockedTimetable;
 import com.example.arcibald160.callblocker.R;
-import com.example.arcibald160.callblocker.Tab3CustomAdapter;
+import com.example.arcibald160.callblocker.tab_adapters.Tab3CustomAdapter;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 public class Tab3Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {

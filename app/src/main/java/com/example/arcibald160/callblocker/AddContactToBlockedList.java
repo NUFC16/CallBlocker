@@ -8,6 +8,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,6 +72,8 @@ public class AddContactToBlockedList extends AppCompatActivity {
                 finish();
             }
         });
+        // back navigation arrow
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     // get contact info if it is picked from native contact app
@@ -184,5 +187,17 @@ public class AddContactToBlockedList extends AppCompatActivity {
             mBlockedNameView.setText(cHelper.contactName);
             mBlockedNumberView.setText(cHelper.contactNumber);
         }
+    }
+
+    //    used for navigating back
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

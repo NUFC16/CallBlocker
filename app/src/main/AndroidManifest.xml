@@ -35,8 +35,21 @@
             android:authorities="com.example.arcibald160.callblocker"
             android:exported="false" />
 
-        <activity android:name=".AddContactToBlockedList" />
-        <activity android:name=".AddNewBlockedTimetable" />
+        <activity
+            android:name=".AddContactToBlockedList"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".AddNewBlockedTimetable"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <service
             android:name=".BlockAllNotification"

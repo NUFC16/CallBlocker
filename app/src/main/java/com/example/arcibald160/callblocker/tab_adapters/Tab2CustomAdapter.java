@@ -1,10 +1,8 @@
-package com.example.arcibald160.callblocker;
+package com.example.arcibald160.callblocker.tab_adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.arcibald160.callblocker.AddContactToBlockedList;
+import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.BlockedViewHolder> {

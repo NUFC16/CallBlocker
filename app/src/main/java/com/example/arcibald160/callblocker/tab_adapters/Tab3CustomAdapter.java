@@ -1,4 +1,4 @@
-package com.example.arcibald160.callblocker;
+package com.example.arcibald160.callblocker.tab_adapters;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -18,6 +18,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arcibald160.callblocker.AddNewBlockedTimetable;
+import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 import com.example.arcibald160.callblocker.tools.CursorTimetableHelper;
 

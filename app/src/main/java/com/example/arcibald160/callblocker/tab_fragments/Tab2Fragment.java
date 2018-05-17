@@ -1,4 +1,4 @@
-package com.example.arcibald160.callblocker.tools;
+package com.example.arcibald160.callblocker.tab_fragments;
 
 
 import android.content.Intent;
@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.arcibald160.callblocker.AddContactToBlockedList;
-import com.example.arcibald160.callblocker.Tab2CustomAdapter;
+import com.example.arcibald160.callblocker.tab_adapters.Tab2CustomAdapter;
 import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 

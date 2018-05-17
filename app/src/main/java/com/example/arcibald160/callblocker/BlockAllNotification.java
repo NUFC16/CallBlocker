@@ -60,7 +60,7 @@ public class BlockAllNotification extends Service {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             notification = new Notification.Builder(getApplicationContext())
                     .setContentTitle(getString(R.string.app_name))
-                    .setContentText("content text")
+                    .setContentText(getString(R.string.notification_text))
                     .setSmallIcon(R.drawable.turn_on_foreground)
                     .setWhen(System.currentTimeMillis())
                     .setContentIntent(contentIntent)
