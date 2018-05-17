@@ -40,4 +40,9 @@
     <string name="label_time_until">Time until</string>
     <string name="submit_timetable">Set</string>
     <string name="switch_text">Activate</string>
+
+    <!-- BlockAll SharedPrefs -->
+    <string name="blockall">BlockAllSharedPreferences</string>
+    <string name="app_shared_preferences">CallBlockerPrefs</string>
+    <string name="stop_blockall">StopBlockAll</string>
 </resources>

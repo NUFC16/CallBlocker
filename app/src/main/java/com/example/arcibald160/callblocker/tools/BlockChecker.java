@@ -1,6 +1,7 @@
 package com.example.arcibald160.callblocker.tools;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -24,17 +25,16 @@ public class BlockChecker {
     }
 
     public boolean canBlock() {
-        return this.isNumberBlocked() || this.isTimeBlocked() || this.isNumberUnknown();
+        return this.isNumberBlocked() || this.isTimeBlocked() || this.isNumberUnknown() || this.isGlobalBlockOn();
     }
 
     private boolean isTimeBlocked() {
-        //TODO: write this function
 
-        // TODO: GET CURRENT DAY
+        // get current day
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-        // TODO: GET CURRENT TIME
+        // get current time
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String curTimeString = dateFormat.format(calendar.getTime());
         Date curTime;
@@ -56,7 +56,6 @@ public class BlockChecker {
 
         boolean isDayBlocked = false;
         while (allValuesCursor.moveToNext()) {
-            //TODO: LOOP THROUGH VALUES AND SEE IF CURRENT DAY IS CORRECT AND TIME IS IN THAT TIMEFRAME
             CursorTimetableHelper cHelper = new CursorTimetableHelper(allValuesCursor);
 
             // if timetable is not activated continue to next
@@ -115,8 +114,12 @@ public class BlockChecker {
                 }
             }
         }
-
         return false;
+    }
+
+    private boolean isGlobalBlockOn() {
+        SharedPreferencesHelper prefs = new SharedPreferencesHelper(mContext);
+        return prefs.isBlockAllActivated();
     }
 
     private boolean isNumberUnknown() {

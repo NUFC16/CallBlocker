@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -35,8 +35,13 @@
             android:authorities="com.example.arcibald160.callblocker"
             android:exported="false" />
 
-        <activity android:name=".AddContactToBlockedList"></activity>
-        <activity android:name=".AddNewBlockedTimetable"></activity>
+        <activity android:name=".AddContactToBlockedList" />
+        <activity android:name=".AddNewBlockedTimetable" />
+
+        <service
+            android:name=".BlockAllNotification"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

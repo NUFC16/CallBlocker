@@ -1,8 +1,14 @@
 package com.example.arcibald160.callblocker;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
@@ -13,20 +19,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.arcibald160.callblocker.tools.SectionsPageAdapter;
+import com.example.arcibald160.callblocker.tools.SharedPreferencesHelper;
 import com.example.arcibald160.callblocker.tools.Tab1Fragment;
 import com.example.arcibald160.callblocker.tools.Tab2Fragment;
 import com.example.arcibald160.callblocker.tools.Tab3Fragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
     private Menu menu;
     private static final int TAB_NUMBER = 3;
+    SharedPreferencesHelper sharedPrefsHelper;
+    Intent myService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPrefsHelper = new SharedPreferencesHelper(this);
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
@@ -66,11 +78,24 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
+        MenuItem busyIcon = menu.findItem(R.id.busy_mode_icon_id);
+
+        if (sharedPrefsHelper.isBlockAllActivated()) {
+            busyIcon.setIcon(R.mipmap.turn_on_round);
+            menu.findItem(R.id.busy_mode_id).setChecked(true);
+            showForegroundNotification();
+        } else {
+            busyIcon.setIcon(R.mipmap.turn_off_round);
+            menu.findItem(R.id.busy_mode_id).setChecked(false);
+            stopForegroundNotification();
+        }
 
         return true;
     }
@@ -78,21 +103,62 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-
         switch (item.getItemId()) {
             case R.id.busy_mode_id:
                 MenuItem busyIcon = menu.findItem(R.id.busy_mode_icon_id);
 
+                boolean isBlockActivated;
+
                 if (item.isChecked()) {
-                    item.setChecked(false);
-                    busyIcon.setIcon(R.mipmap.turn_off_round);
+                    isBlockActivated = false;
                 } else {
-                    item.setChecked(true);
-                    busyIcon.setIcon(R.mipmap.turn_on_round);
+                    isBlockActivated = true;
                 }
+                item.setChecked(isBlockActivated);
+
+                sharedPrefsHelper.setBlockAllState(isBlockActivated);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void showForegroundNotification() {
+        myService = new Intent(this, BlockAllNotification.class);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(myService);
+        } else {
+            startService(myService);
+        }
+    }
+
+    private void stopForegroundNotification() {
+        if (myService != null) {
+            myService.putExtra(getString(R.string.stop_blockall), true);
+            startService(myService);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Set up a listener whenever a key changes
+         sharedPrefsHelper.getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        sharedPrefsHelper.getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        invalidateOptionsMenu();
     }
 }
