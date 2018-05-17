@@ -1,8 +1,11 @@
 package com.example.arcibald160.callblocker.tab_adapters;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +50,7 @@ public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.Bl
 
         // if name is unknown
         name = (name == null) ? mContext.getString(R.string.unknown): name;
-        String number = mCursor.getString(numberIndex);
+        final String number = mCursor.getString(numberIndex);
 
         //Set values
         holder.itemView.setTag(id);
@@ -57,15 +60,37 @@ public class Tab2CustomAdapter extends RecyclerView.Adapter<Tab2CustomAdapter.Bl
         holder.removeBlockedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int id = (int) view.getTag();
+                AlertDialog.Builder builder;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(mContext, AlertDialog.THEME_HOLO_LIGHT);
+                } else {
+                    builder = new AlertDialog.Builder(mContext);
+                }
 
                 // Build appropriate uri with String row id appended
                 String stringId = Integer.toString(id);
                 Uri uri = BlockListContract.BlockListEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
-                mContext.getContentResolver().delete(uri, null, null);
+
+                final Uri finalUri = uri;
+                builder.setTitle("Remove from blocked list")
+                        .setMessage("Are you sure you want to remove " + number + "?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mContext.getContentResolver().delete(finalUri, null, null);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_delete)
+                        .show();
             }
         });
+
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -60,6 +60,7 @@ public class AddContactToBlockedList extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(mBlockedNumberView.getText().toString())) {
                     Toast.makeText(getApplicationContext(), getString(R.string.enter_number), Toast.LENGTH_LONG).show();
+                    return;
                 }
 
                 // update / add

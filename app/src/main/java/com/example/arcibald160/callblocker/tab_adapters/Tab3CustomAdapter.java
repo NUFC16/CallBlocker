@@ -88,7 +88,7 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
                 AlertDialog.Builder builder;
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog_Alert);
+                    builder = new AlertDialog.Builder(mContext, AlertDialog.THEME_HOLO_LIGHT);
                 } else {
                     builder = new AlertDialog.Builder(mContext);
                 }
@@ -105,7 +105,7 @@ public class Tab3CustomAdapter extends RecyclerView.Adapter<Tab3CustomAdapter.Bl
                                 // do nothing
                             }
                         })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setIcon(android.R.drawable.ic_delete)
                         .show();
 
                 return true;
