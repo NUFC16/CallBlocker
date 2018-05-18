@@ -56,18 +56,15 @@ public class BlockAllNotification extends Service {
                 disableIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Notification notification = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            notification = new Notification.Builder(getApplicationContext())
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(getString(R.string.notification_text))
-                    .setSmallIcon(R.drawable.turn_on_foreground)
-                    .setWhen(System.currentTimeMillis())
-                    .setContentIntent(contentIntent)
-                    .addAction(0, "Show", contentIntent)
-                    .addAction(0, "Disable", disablePendingIntent)
-                    .build();
-        }
+        Notification notification = new Notification.Builder(getApplicationContext())
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.notification_text))
+                .setSmallIcon(R.drawable.turn_on_foreground)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(contentIntent)
+                .addAction(0, "Show", contentIntent)
+                .addAction(0, "Disable", disablePendingIntent)
+                .build();
 
         startForeground(NOTIFICATION_ID, notification);
 

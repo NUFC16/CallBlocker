@@ -37,12 +37,19 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         sharedPrefsHelper = new SharedPreferencesHelper(this);
 
+        // control tabs
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setOffscreenPageLimit(TAB_NUMBER);
         setupViewPager(mViewPager);
 
+        if (getIntent().hasExtra(getString(R.string.default_fragment))) {
+            int position = getIntent().getIntExtra(getString(R.string.default_fragment), 0);
+            mViewPager.setCurrentItem(position);
+        }
+        
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
 

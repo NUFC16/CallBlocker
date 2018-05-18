@@ -1,16 +1,27 @@
 package com.example.arcibald160.callblocker.tools;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.example.arcibald160.callblocker.BlockAllNotification;
+import com.example.arcibald160.callblocker.MainActivity;
+import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
 
 import java.lang.reflect.Method;
@@ -22,8 +33,7 @@ public class CallBlock extends BroadcastReceiver {
     private static final String TAG = "CallBlockReceiver";
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
 
         // If, the received action is not a type of "Phone_State", ignore it
         if (!intent.getAction().equals("android.intent.action.PHONE_STATE")) {
@@ -50,6 +60,7 @@ public class CallBlock extends BroadcastReceiver {
                 try {
                     declinePhone();
                     addToBlockedCallsList(number, context);
+                    raiseNotification(context);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -57,6 +68,36 @@ public class CallBlock extends BroadcastReceiver {
 
             return;
         }
+    }
+
+    private void raiseNotification(Context context) {
+
+        Intent mainAppIntent = new Intent(context, MainActivity.class);
+        mainAppIntent.putExtra(context.getString(R.string.default_fragment), 1);
+        // Prepare a notification with vibration, sound and lights
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setSmallIcon(android.R.drawable.stat_notify_missed_call)
+                .setContentTitle(context.getString(R.string.notification_title))
+                .setContentText(number)
+                .setVibrate(new long[]{0, 400, 250, 400})
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(
+                        context,
+                        0,
+                        mainAppIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT)
+                );
+
+        // You must set the Notification Channel ID
+        // if your app is targeting API Level 26 and up (Android O)
+        // More info: http://bit.ly/2Bzgwl7
+        builder.setChannelId(context.getString(R.string.notification_channel));
+
+        // Get an instance of the NotificationManager service
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+
+        // Build the notification and display it
+        notificationManager.notify(1, builder.build());
     }
 
     // list of recently blocked calls gets filled here

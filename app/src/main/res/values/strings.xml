@@ -47,5 +47,10 @@
     <string name="stop_blockall">StopBlockAll</string>
 
     <!-- BlockAllNotification -->
-    <string name="notification_text">All incoming call will be blocked</string>
+    <string name="notification_text">All incoming calls will be blocked</string>
+
+    <!-- CallBlock BroadcastReceiver -->
+    <string name="notification_title">Call was blocked from:</string>
+    <string name="notification_channel">myNotificationChannelId</string>
+    <string name="default_fragment">FRAGMENT_ID</string>
 </resources>
