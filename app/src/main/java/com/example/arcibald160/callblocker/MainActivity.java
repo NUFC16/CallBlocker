@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             int position = getIntent().getIntExtra(getString(R.string.default_fragment), 0);
             mViewPager.setCurrentItem(position);
         }
-        
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
 
