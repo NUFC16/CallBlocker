@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // control tabs
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
-
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setOffscreenPageLimit(TAB_NUMBER);
         setupViewPager(mViewPager);

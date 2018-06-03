@@ -52,7 +52,6 @@ public class Tab1CustomAdapter extends RecyclerView.Adapter<Tab1CustomAdapter.Li
         holder.itemView.setTag(id);
         holder.blockedNumberView.setText(number);
         holder.blockedDateTimeView.setText(datetime);
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

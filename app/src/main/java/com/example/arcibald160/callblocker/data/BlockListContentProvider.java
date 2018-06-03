@@ -15,11 +15,10 @@ public class BlockListContentProvider extends ContentProvider {
 
     public static final int BLOCKED_NUMBERS = 100;
     public static final int BLOCKED_NUMBERS_WITH_ID = 101;
-    public static final int BLOCKED_NUMBERS_WITH_TIME = 102;
-    public static final int BLOCKED_NUMBERS_WITH_DATE = 103;
-    public static final int BLOCKED_CALLS = 104;
-    public static final int BLOCKED_TIMETABLE = 105;
-    public static final int BLOCKED_TIMETABLE_WITH_ID = 106;
+    public static final int BLOCKED_CALLS = 102;
+    public static final int BLOCKED_CALLS_TOP_10 = 103;
+    public static final int BLOCKED_TIMETABLE = 104;
+    public static final int BLOCKED_TIMETABLE_WITH_ID = 105;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -27,11 +26,10 @@ public class BlockListContentProvider extends ContentProvider {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS, BLOCKED_NUMBERS);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/#", BLOCKED_NUMBERS_WITH_ID);
-        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_CALLS, BLOCKED_CALLS);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_TIMETABLE, BLOCKED_TIMETABLE);
         uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_TIMETABLE + "/#", BLOCKED_TIMETABLE_WITH_ID);
-//        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/time/#", BLOCKED_NUMBERS_WITH_TIME);
-//        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_NUMBERS + "/date/#", BLOCKED_NUMBERS_WITH_DATE);
+        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_CALLS, BLOCKED_CALLS);
+        uriMatcher.addURI(BlockListContract.AUTHORITY, BlockListContract.PATH_BLOCKED_CALLS_TOP10, BLOCKED_CALLS_TOP_10);
         return uriMatcher;
     }
 
@@ -78,6 +76,16 @@ public class BlockListContentProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
+                break;
+            case BLOCKED_CALLS_TOP_10:
+                retCursor =  db.rawQuery(
+                    "SELECT  " + BlockListContract.BlockedCallsReceived._ID + ", " +
+                    BlockListContract.BlockedCallsReceived.COLUMN_NUMBER + ", " +
+                    BlockListContract.BlockedCallsReceived.COLUMN_NAME + ", " +
+                    "COUNT(" + BlockListContract.BlockedCallsReceived.COLUMN_NUMBER +") AS count FROM " +
+                    BlockListContract.BlockedCallsReceived.TABLE_NAME + " GROUP BY " +
+                    BlockListContract.BlockedCallsReceived.COLUMN_NUMBER + " ORDER BY -count LIMIT 10", null
+                );
                 break;
             case BLOCKED_TIMETABLE:
                 retCursor =  db.query(

@@ -15,6 +15,7 @@ public class BlockListContract {
     public static final String PATH_BLOCKED_NUMBERS = "numbers";
     public static final String PATH_BLOCKED_CALLS = "calls";
     public static final String PATH_BLOCKED_TIMETABLE = "timetable";
+    public static final String PATH_BLOCKED_CALLS_TOP10 = "top10";
 
     /* BlockListEntry is an inner class that defines the contents of the blocked calls table */
     public static final class BlockListEntry implements BaseColumns {
@@ -35,6 +36,9 @@ public class BlockListContract {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_BLOCKED_CALLS).build();
+
+        public static final Uri TOP_10_CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BLOCKED_CALLS_TOP10).build();
 
         public static final String TABLE_NAME = "blocked_calls";
 
