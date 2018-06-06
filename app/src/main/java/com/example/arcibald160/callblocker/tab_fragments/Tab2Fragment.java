@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -21,6 +20,7 @@ import com.example.arcibald160.callblocker.AddContactToBlockedList;
 import com.example.arcibald160.callblocker.tab_adapters.Tab2CustomAdapter;
 import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
+import com.shamanland.fab.FloatingActionButton;
 
 
 public class Tab2Fragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener {

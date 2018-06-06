@@ -28,15 +28,16 @@
         app:layout_constraintTop_toBottomOf="@+id/search_view"></android.support.v7.widget.RecyclerView>
 
 
-    <android.support.design.widget.FloatingActionButton
+    <com.shamanland.fab.FloatingActionButton
         android:id="@+id/add_blocked_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="28dp"
         android:layout_marginTop="364dp"
-        android:backgroundTint="@color/green"
+        android:backgroundTint="@color/colorPrimary"
         android:clickable="true"
         android:focusable="true"
+        android:src="@drawable/ic_add_blocked"
         android:tint="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/search_view"
         app:layout_constraintTop_toTopOf="@+id/recycler_view_tab2"

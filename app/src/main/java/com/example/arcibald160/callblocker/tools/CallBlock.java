@@ -1,25 +1,18 @@
 package com.example.arcibald160.callblocker.tools;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.example.arcibald160.callblocker.BlockAllNotification;
 import com.example.arcibald160.callblocker.MainActivity;
 import com.example.arcibald160.callblocker.R;
 import com.example.arcibald160.callblocker.data.BlockListContract;
@@ -41,13 +34,16 @@ public class CallBlock extends BroadcastReceiver {
         }
 
         if (intent.getExtras().getString(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)){
-            // Fetch the number of incoming call
-            number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 
-            // TODO: remove hardcoded values and make better solution
-            String countryCode = "+385";
-            if (number.contains(countryCode)) {
-                number = number.replace(countryCode, "0");
+            // Fetch the number of incoming call (and replace all non char values like +
+            number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER).replaceAll("\\W","");
+
+            String[] countryCodes = context.getResources().getStringArray(R.array.country_codes);
+            for(int i=0; i<countryCodes.length; i++) {
+                if (number.startsWith(countryCodes[i])) {
+                    // database must contain numbers like: 091 123 456 78
+                    number = number.replace(countryCodes[i], "0");
+                }
             }
 
 //            // debug purposes e-is ususally error but this is hack for broadcaste receiver
@@ -138,8 +134,7 @@ public class CallBlock extends BroadcastReceiver {
             serviceManagerClass = Class.forName(serviceManagerName);
             serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
 
-            Method getService = // getDefaults[29];
-                    serviceManagerClass.getMethod("getService", String.class);
+            Method getService = serviceManagerClass.getMethod("getService", String.class);
             Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
 
             Binder tmpBinder = new Binder();
@@ -152,7 +147,7 @@ public class CallBlock extends BroadcastReceiver {
             telephonyEndCall.invoke(telephonyObject);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("unable", "msg cant dissconect call....");
+            Log.d("unable", "msg cant disconnect call....");
         }
     }
 }

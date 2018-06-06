@@ -140,7 +140,18 @@ public class AddContactToBlockedList extends AppCompatActivity {
         // Defines an object to contain the new values to insert
         ContentValues values = new ContentValues();
 
-        values.put(BlockListContract.BlockListEntry.COLUMN_NUMBER, mBlockedNumberView.getText().toString());
+        // clear whitespace
+        String number = mBlockedNumberView.getText().toString().replaceAll("\\s+","");
+
+        String[] countryCodes = getResources().getStringArray(R.array.country_codes);
+        for(int i=0; i<countryCodes.length; i++) {
+            if (number.startsWith(countryCodes[i])) {
+                // database must contain numbers like: 091 123 456 78
+                number = number.replace(countryCodes[i], "0");
+            }
+        }
+
+        values.put(BlockListContract.BlockListEntry.COLUMN_NUMBER, number);
 
         if (!TextUtils.isEmpty(mBlockedNameView.getText().toString())) {
             values.put(BlockListContract.BlockListEntry.COLUMN_NAME, mBlockedNameView.getText().toString());

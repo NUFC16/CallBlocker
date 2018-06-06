@@ -53,4 +53,9 @@
     <string name="notification_title">Call was blocked from:</string>
     <string name="notification_channel">myNotificationChannelId</string>
     <string name="default_fragment">FRAGMENT_ID</string>
+
+    <string-array name="country_codes">
+        <item>385</item>
+        <item>00385</item>
+    </string-array>
 </resources>
