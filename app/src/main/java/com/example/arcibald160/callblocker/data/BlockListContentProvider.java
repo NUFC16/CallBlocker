@@ -82,9 +82,10 @@ public class BlockListContentProvider extends ContentProvider {
                     "SELECT  " + BlockListContract.BlockedCallsReceived._ID + ", " +
                     BlockListContract.BlockedCallsReceived.COLUMN_NUMBER + ", " +
                     BlockListContract.BlockedCallsReceived.COLUMN_NAME + ", " +
-                    "COUNT(" + BlockListContract.BlockedCallsReceived.COLUMN_NUMBER +") AS count FROM " +
-                    BlockListContract.BlockedCallsReceived.TABLE_NAME + " GROUP BY " +
-                    BlockListContract.BlockedCallsReceived.COLUMN_NUMBER + " ORDER BY -count LIMIT 10", null
+                    "COUNT(" + BlockListContract.BlockedCallsReceived.COLUMN_NUMBER +
+                    ") AS count FROM " + BlockListContract.BlockedCallsReceived.TABLE_NAME +
+                    " GROUP BY " + BlockListContract.BlockedCallsReceived.COLUMN_NUMBER +
+                    " ORDER BY -count LIMIT 10", null
                 );
                 break;
             case BLOCKED_TIMETABLE:

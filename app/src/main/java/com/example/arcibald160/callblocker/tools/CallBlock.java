@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -103,11 +105,31 @@ public class CallBlock extends BroadcastReceiver {
         java.sql.Date sqlDate = new java.sql.Date(current.getTime());
         java.sql.Time sqlTime = new java.sql.Time(current.getTime());
 
+        Uri uri = BlockListContract.BlockListEntry.CONTENT_URI;
+
+        // search only number column
+        Cursor mCursor = context.getContentResolver().query(
+                uri,
+                null,
+                BlockListContract.BlockListEntry.COLUMN_NUMBER + "=?",
+                new String[]{ number },
+                null
+        );
+
+        int nameIdx = mCursor.getColumnIndex(BlockListContract.BlockListEntry.COLUMN_NAME);
+        String name = null;
+        if (mCursor.moveToFirst()) {
+            name = mCursor.getString(nameIdx);
+        }
+
         // insert new values to blocked contacts list (used in recently)
         ContentValues mBlockedList = new ContentValues();
         mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_NUMBER, number);
         mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_DATE, String.valueOf(sqlDate));
         mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_TIME, String.valueOf(sqlTime));
+        if (name != null) {
+            mBlockedList.put(BlockListContract.BlockedCallsReceived.COLUMN_NAME, name);
+        }
 
         context.getContentResolver().insert(
                 BlockListContract.BlockedCallsReceived.CONTENT_URI, // the user dictionary content URI

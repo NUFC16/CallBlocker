@@ -68,7 +68,6 @@ public class BlockChecker {
             // see if current day matches some blocked days in the timetable
             switch (day) {
                 case Calendar.MONDAY:
-                    // 1 -> true, 0 -> false : true is trigger for blocking
                     index = 0;
                     break;
                 case Calendar.TUESDAY:
@@ -103,14 +102,26 @@ public class BlockChecker {
                     e.printStackTrace();
                     continue;
                 }
-                int a = timeFrom.compareTo(curTime);
-                int b = timeUntil.compareTo(curTime);
 
-                // time.compareTo(time2) == -1 if time < time2
-                if (timeFrom.compareTo(curTime) <= 0 && timeUntil.compareTo(curTime) >= 0) {
-                    // if day is blocked exit and time is in the time frame send the signal for cancelling the call
-                    allValuesCursor.close();
-                    return true;
+                // if time from is less then time until example: 12:00 - 18:00
+                if (timeFrom.compareTo(timeUntil) <= 0) {
+                    // time.compareTo(time2) == -1 if time < time2
+                    if (timeFrom.compareTo(curTime) <= 0 && timeUntil.compareTo(curTime) >= 0) {
+                        // if day is blocked exit and time is in the time frame send the signal for cancelling the call
+                        allValuesCursor.close();
+                        return true;
+                    }
+                } else {
+                    if (timeFrom.compareTo(curTime) <= 0 && timeUntil.compareTo(curTime) <= 0) {
+                        // example: 23:00 - 23:21 - 01:00
+                        allValuesCursor.close();
+                        return true;
+                    } else if (timeFrom.compareTo(curTime) >= 0 && timeUntil.compareTo(curTime) >= 0) {
+                        // example: 23:00 - 00:32 - 01:00
+                        allValuesCursor.close();
+                        return true;
+                    }
+
                 }
             }
         }
