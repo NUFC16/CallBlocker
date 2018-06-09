@@ -108,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         switch (item.getItemId()) {
             case R.id.busy_mode_id:
-                MenuItem busyIcon = menu.findItem(R.id.busy_mode_icon_id);
-
                 boolean isBlockActivated;
 
                 if (item.isChecked()) {
@@ -148,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onResume() {
         super.onResume();
         // Set up a listener whenever a key changes
+        invalidateOptionsMenu();
          sharedPrefsHelper.getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
     }
