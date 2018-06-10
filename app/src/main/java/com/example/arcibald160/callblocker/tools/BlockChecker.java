@@ -134,7 +134,7 @@ public class BlockChecker {
     }
 
     private boolean isNumberUnknown() {
-        //TODO: write this function
+        //TODO: add functionality of blocking all numbers that are not in contacts
         return false;
     }
 

@@ -140,8 +140,10 @@ public class AddContactToBlockedList extends AppCompatActivity {
         // Defines an object to contain the new values to insert
         ContentValues values = new ContentValues();
 
-        // clear whitespace
-        String number = mBlockedNumberView.getText().toString().replaceAll("\\s+","");
+        // clear whitespace and remove characters like +
+        String number = mBlockedNumberView.getText().toString()
+                .replaceAll("\\s+","")
+                .replaceAll("\\W","");
 
         String[] countryCodes = getResources().getStringArray(R.array.country_codes);
         for(int i=0; i<countryCodes.length; i++) {
